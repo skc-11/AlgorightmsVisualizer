@@ -4,24 +4,35 @@ import utils
 # General Search Algorithm(will act as different search algoritm according to the
 # frontier pass in as argument)
 def generalSearch(problem, frontier):
-    seen = []
-    expanded = []
+    seen = set()
+    history = []
 
-    frontier.push((problem.getStartState(), []))
+
+    if isinstance(frontier, utils.PriorityQueue):
+        p = utils.manhattanDistance(problem.getStartState(), problem.getGoal())
+        frontier.push((problem.getStartState(), []), p)
+    else:
+        frontier.push((problem.getStartState(), []))
 
     while frontier:
         currentNode, path = frontier.pop() 
+        # expanded.append(currentNode)
 
         if currentNode not in seen:
-            seen.append(currentNode)
+            seen.add(currentNode)
+
             #  check if we reached the goal
             if problem.isGoal(currentNode):
-                return path, expanded
-            
+                history.append((currentNode, seen.copy(), []))
+                return path, history
+
             # else expand this node
             else:
-                for child in problem.getSuccessors(currentNode):
-                    expanded.append(child)
+                discovered =  problem.getSuccessors(currentNode)
+                for child in discovered:
+                    # history  for visualization
+                    history.append((currentNode, seen.copy(), discovered))
+
                     if isinstance(frontier, utils.PriorityQueue):
                         p = utils.manhattanDistance(child, problem.getGoal())
                         frontier.push((child, path + [child]), p)
@@ -43,13 +54,13 @@ def bfs(problem):
 
 # astar search(default heuristic is null heuristic)
 def astar(problem, heuristic=utils.nullHeuristic):
-    return generalSearch(problem, utils.PriorityQueue(heuristic))
+    return generalSearch(problem, utils.PriorityQueue())
 
 
 # uniform cost Search
 # this is same as astart except its heuristic will always return 0
-def ucs():
-    pass
+def ucs(problem):
+    return astar(problem)
 
 
 
