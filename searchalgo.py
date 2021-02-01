@@ -3,20 +3,19 @@ import utils
 
 # General Search Algorithm(will act as different search algoritm according to the
 # frontier pass in as argument)
-def generalSearch(problem, frontier):
+def generalSearch(problem, frontier, heuristics = utils.manhattanDistance):
     seen = set()
     history = []
 
-
+    start = problem.getStartState()
     if isinstance(frontier, utils.PriorityQueue):
         p = utils.manhattanDistance(problem.getStartState(), problem.getGoal())
-        frontier.push((problem.getStartState(), []), p)
+        frontier.push((start, [start]), p)
     else:
-        frontier.push((problem.getStartState(), []))
-    i = 0
+        frontier.push((start, [start]))
+
     while frontier:
-        print("Iteration: ", i)
-        i += 1
+        problem.incrementIter()
 
         currentNode, path = frontier.pop() 
         # expanded.append(currentNode)
@@ -37,7 +36,7 @@ def generalSearch(problem, frontier):
                     history.append((currentNode, seen.copy(), discovered))
 
                     if isinstance(frontier, utils.PriorityQueue):
-                        p = utils.manhattanDistance(child, problem.getGoal())
+                        p = heuristics(child, problem.getGoal())
 
                         #print("from: " + str(child) + " Distance: " + str(p))
 
@@ -59,14 +58,14 @@ def bfs(problem):
     return generalSearch(problem, utils.Queue())
 
 # astar search(default heuristic is null heuristic)
-def astar(problem, heuristic=utils.nullHeuristic):
-    return generalSearch(problem, utils.PriorityQueue())
+def astar(problem, heuristic=utils.manhattanDistance):
+    return generalSearch(problem, utils.PriorityQueue(), heuristic)
 
 
 # uniform cost Search
 # this is same as astart except its heuristic will always return 0
 def ucs(problem):
-    return astar(problem)
+    return astar(problem, utils.nullHeuristic)
 
 
 

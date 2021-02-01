@@ -1,4 +1,3 @@
-from os import remove
 import numpy as np
 from utils import manhattanDistance
 from random import randrange
@@ -36,6 +35,7 @@ class MazeGenerator():
         return neighbors
 
 
+    # Provided a cell, get random closest cell to 'cell' in maze set
     def getClosestRandomCell(self, cell, maze):
         nei = []
 
@@ -46,8 +46,7 @@ class MazeGenerator():
         return nei[randrange(len(nei))]
 
 
-    # removes wall between cell1  and cell2, meaning add the wall between them to
-    # the maze
+    # method to remove wall between cell1  and cell2
     def removeWall(self,cell1, cell2, maze):
         # Wall is either on left or right side of cell1
         if cell1[0] == cell2[0]:
@@ -69,10 +68,12 @@ class MazeGenerator():
             else:
                 x = cell1[0] - 1
 
+        # convert the wall to cell by adding it to the maze
         maze.add((x,y))
         return (x,y)
 
 
+    # Prim's Maze generator algorithm
     def prims_maze(self, w, h):
         def _prims_maze(w,h):
             grid = np.ones((w, h))
@@ -88,48 +89,46 @@ class MazeGenerator():
 
             return grid, cells, walls
 
-        grid,cells,walls   = _prims_maze(w,h)
+        grid,cells, walls   = _prims_maze(w,h)
 
-        maze = set()
-        frontier = []
+        maze = set()    # keeps track of valid cells in maze
+        frontier = []   # unvisited cells
 
 
         initialCell = cells[randrange(len(cells))]
         frontier.extend(self.getNeighborCells(initialCell, cells, maze))
         maze.add(initialCell)
 
-
         while frontier:
+            # get the random index from the frontier
             index = randrange(len(frontier))
 
+            # get the random cell from frontier via random index
             randomFrontierCell = frontier[index]
 
+            # Add the cell to maze
             maze.add(randomFrontierCell)
 
+            # remove the cell from the frontier
             frontier.remove(randomFrontierCell)
 
             # Get Closest maze Cell to this cell to open path with
-            # Break ties randomly
+            # Breaks ties randomly
             openPathWith = self.getClosestRandomCell(randomFrontierCell, maze)
 
+            # remove the wall between random cell from frontier and closest cell in maze
+            self.removeWall(randomFrontierCell, openPathWith, maze)
 
-            print("")
-            print("Random Cell: ", randomFrontierCell)
-            print("Removed Wall: ", self.removeWall(randomFrontierCell, openPathWith, maze))
-            print("Open path to: ", openPathWith)
-            print("")
-
-
+            # add  all neighbors of random  cell to the frontier
             frontier.extend(self.getNeighborCells(randomFrontierCell, cells, maze))
 
+        # construct the maze in 2d Array
         for cell in maze:
             grid[cell[0], cell[1]] = 0
 
+        # Open Start and End of the grid
         grid[1,0] = 0
-        grid[w-2,h-1] = 0
+        grid[w-2, h-1] = 0
 
+        # return the maze
         return grid
-
-
-maze = MazeGenerator().prims_maze(7,7)
-print(maze)

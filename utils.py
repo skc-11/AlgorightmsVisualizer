@@ -101,7 +101,7 @@ class PriorityQueueWithFunction(PriorityQueue):
 """
 HEURISTIC FUNCTIONS
 """
-def nullHeuristic():
+def nullHeuristic(p1, p2):
     return 0
 
 
