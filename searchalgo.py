@@ -13,8 +13,11 @@ def generalSearch(problem, frontier):
         frontier.push((problem.getStartState(), []), p)
     else:
         frontier.push((problem.getStartState(), []))
-
+    i = 0
     while frontier:
+        print("Iteration: ", i)
+        i += 1
+
         currentNode, path = frontier.pop() 
         # expanded.append(currentNode)
 
@@ -35,6 +38,9 @@ def generalSearch(problem, frontier):
 
                     if isinstance(frontier, utils.PriorityQueue):
                         p = utils.manhattanDistance(child, problem.getGoal())
+
+                        #print("from: " + str(child) + " Distance: " + str(p))
+
                         frontier.push((child, path + [child]), p)
                     else:
                         frontier.push((child, path + [child]))

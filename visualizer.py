@@ -6,6 +6,7 @@ from problem import Problem
 import numpy as np
 import sys
 from random import randrange
+from mazegenerator import MazeGenerator
 
 
 
@@ -17,8 +18,8 @@ YELLOW = (255,255,0)
 RED = (255, 0 ,0)
 
 
-WINDOW_HEIGHT = 800
-WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 780
+WINDOW_WIDTH = 780
 colors = [BLACK, WHITE, GREEN, BLUE]
 
 def main(grid, solution, expanded):
@@ -48,7 +49,7 @@ def main(grid, solution, expanded):
                 sys.exit()
 
         pygame.display.update()
-        clock.tick(500)
+        clock.tick(60)
 
 def drawPath(cell):
     blockSize = 20
@@ -87,7 +88,7 @@ def drawCells(historyEntry):
     pygame.draw.rect(SCREEN, YELLOW, rect)
 
     # draw the start cell
-    rect = pygame.Rect(0, 0, blockSize, blockSize)
+    rect = pygame.Rect(0, 1 * blockSize,blockSize, blockSize)
     pygame.draw.rect(SCREEN, GREEN, rect)
 
 # Draw Initial Grid
@@ -104,25 +105,10 @@ def drawGrid(grid):
 
     
 if __name__ == '__main__':
-    start = (0,0)
-    end = (39,39)
-    grid  = np.zeros((40,40))
+    start = (1,0)
+    end = (37,38)
+    grid  = MazeGenerator().prims_maze(39, 39)
 
-    grid[0 : 39, 5]    = 1
-    grid[1 : 40, 10]    = 1
-    grid[0 : 39, 15]    = 1
-    grid[1 : 40, 20]    = 1
-    grid[0 : 39, 25]    = 1
-    grid[1 : 40, 30]    = 1
-    grid[0 : 39, 35]    = 1
-
-    """
-    grid[0 : 39, 2]    = 1
-    grid[1 : 40, 10]    = 1
-    grid[0 : 39, 13]    = 1
-    grid[1 : 40, 15]    = 1
-    grid[0 : 39, 17]    = 1
-    """
 
     prob = Problem(grid,start, end)
     solution, expanded =  searchalgo.astar(problem=prob) 
