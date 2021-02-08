@@ -31,16 +31,16 @@ def generalSearch(problem, frontier, heuristics = utils.manhattanDistance):
             # else expand this node
             else:
                 discovered =  problem.getSuccessors(currentNode)
+                pathLen = len(path) + 1
                 for child in discovered:
                     # history  for visualization
                     history.append((currentNode, seen.copy(), discovered))
 
                     if isinstance(frontier, utils.PriorityQueue):
+                        # get the heuristic val
                         p = heuristics(child, problem.getGoal())
-
-                        #print("from: " + str(child) + " Distance: " + str(p))
-
-                        frontier.push((child, path + [child]), p)
+                        # use path length so far and heuristic val as
+                        frontier.push((child, path + [child]), (p + pathLen))
                     else:
                         frontier.push((child, path + [child]))
 

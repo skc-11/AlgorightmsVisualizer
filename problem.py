@@ -61,7 +61,8 @@ class Problem:
         return nx >= 0 and nx < self.m and ny >= 0 and ny < self.n  and self.grid[nx, ny] == 0
 
     # Print the stat of this problems solutoin
-    def print_stats(self):
-        print("Total Time: %.4f" % (self.timeEnd - self.timeStart))
-        print("Total Iteration: ", self.iter)
-        print("Total Expanded Nodes: ", self.expanded)
+    def getStats(self):
+        stat = "Total Time: %.4f" % (self.timeEnd - self.timeStart) + " sec\n"
+        stat += "Total Iteration: " + str(self.iter) + "\n"
+        stat += "Total Expanded Nodes: " + str(self.expanded) 
+        return stat
